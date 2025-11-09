@@ -1,0 +1,9 @@
+get_next_line recibe el file descriptor que el main le paso al llamar "open" sobre este mismo archivo .txt
+get_next_line tiene que usar un buffer para que la funcion "read" lo pueda usar para llenarlo con lo que lea
+Para esto necesitamos usar malloc y reservar la cantidad de bytes que hay en la variable global BUFFER_SIZE + 1 (para poder agregarle el caracter nulo a lo que leamos y que sea un string que get_next_line pueda devolver)
+Primero hacemos algunos checkeos: Que malloc no devuelva null, que el filedescriptor sea legible con read (read(fd,0,0)) ya sea porque no exista, no tenga read rights o ocurrio un error al leer.
+Si todos los checkeos estan bien, vamos a ir guardando en una variable estatica de tipo char* lo que nos puede servir para la prox vez que llamemos a get next line
+En una funcion auxiliar ft_fill_current_line_buffer, le vamos a pasar el buffer que creamos para que lo pueda usar internamente al llamar a la funcion read.
+La funcion ft_fill_current_line_buffer va a ir guardando en una variable lo que va leyendo sin encontrar ningun \n o \0, a esta variable la llamaremos 
+Cada vez que llamamos a read, nos vamos a fijar si leimos un caracter \n o \0:
+	Si lo leimos, entonces devolvemos
