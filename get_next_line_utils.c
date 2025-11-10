@@ -6,12 +6,14 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:58:33 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:09 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/10 16:47:19 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+// Description: calculate the length of a string,
+// excluding the terminating null byte ('\0')
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -24,6 +26,9 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
+// Description: returns a pointer to a new string
+// which is a duplicate of the string s. Memory for the new string
+// is obtained with malloc, and can be freed with free.
 char	*ft_strdup(const char *s)
 {
 	char	*copy;
@@ -46,6 +51,9 @@ char	*ft_strdup(const char *s)
 	return (copy);
 }
 
+// Description: Allocates memory (using malloc)
+// and returns a new string, which is the result
+// of concatenating ’s1’ and ’s2’.
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	len1;
@@ -75,6 +83,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (result);
 }
 
+// Description: returns a pointer to the first occurrence
+// of the character c in the string s.
 char	*ft_strchr(const char *s, int c)
 {
 	int	i;
@@ -95,6 +105,8 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
+// Description: returns characters from the string value
+// starting at the character position specidied by start.
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	real_len;
