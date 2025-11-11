@@ -6,11 +6,33 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:58:33 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/10 16:47:19 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:55:21 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+// Description: returns a pointer to the first occurrence
+// of the character c in the string s.
+char	*ft_strchr(const char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == (char)c)
+		{
+			return ((char *)(s + i));
+		}
+		i++;
+	}
+	if ((char)c == '\0')
+	{
+		return ((char *)(s + i));
+	}
+	return (NULL);
+}
 
 // Description: calculate the length of a string,
 // excluding the terminating null byte ('\0')
@@ -81,28 +103,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	result[i] = '\0';
 	return (result);
-}
-
-// Description: returns a pointer to the first occurrence
-// of the character c in the string s.
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (char)c)
-		{
-			return ((char *)(s + i));
-		}
-		i++;
-	}
-	if ((char)c == '\0')
-	{
-		return ((char *)(s + i));
-	}
-	return (NULL);
 }
 
 // Description: returns characters from the string value

@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:55:38 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/10 13:45:08 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:59:03 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <stdio.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 20
 # endif
 
 char	*get_next_line(int fd);
