@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:45:02 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/11 12:57:09 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:17:25 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*ft_set_current_line(char *line_buffer)
 	return (backup);
 }
 
-static char	*ft_read_until_newline(int fd, char *backup, char *buffer)
+static char	*ft_read_until_newline(int fd, char **backup, char *buffer)
 {
 	ssize_t	bytes_read;
 	char	*tmp;
@@ -45,22 +45,25 @@ static char	*ft_read_until_newline(int fd, char *backup, char *buffer)
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
-			free(backup);
+			free(*backup);
+			*backup = NULL;
 			return (NULL);
 		}
 		else if (bytes_read == 0)
 			break ;
 		buffer[bytes_read] = '\0';
-		if (!backup)
-			backup = ft_strdup("");
-		tmp = backup;
-		backup = ft_strjoin(tmp, buffer);
+		if (!*backup)
+			*backup = ft_strdup("");
+		tmp = *backup;
+		*backup = ft_strjoin(tmp, buffer);
 		free(tmp);
 		tmp = NULL;
+		if (!*backup)
+			return (NULL);
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	return (backup);
+	return (*backup);
 }
 
 char	*get_next_line(int fd)
@@ -68,47 +71,27 @@ char	*get_next_line(int fd)
 	static char	*backup;
 	char		*line;
 	char		*buffer;
-	
-	backup = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+
 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	backup = ft_read_until_newline(fd, backup, buffer);
-	free(buffer);
-	if (!backup)
+	if (fd < 0 || BUFFER_SIZE < 0)
+	{
+		free(backup);
+		free(buffer);
+		backup = NULL;
+		buffer = NULL;
 		return (NULL);
-	line = ft_extract_line(backup);
-	backup = ft_update_backup(line);
+	}
+	line = ft_read_until_newline(fd, &backup, buffer);
+	free(buffer);
+	buffer = NULL;
+	if (!line)
+		return (NULL);
+	backup = ft_set_current_line(line);
 	return (line);
 }
 
-// char	*get_next_line(int fd)
-// {
-// 	static char	*backup;
-// 	char		*line;
-// 	char		*buffer;
-
-// 	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-// 	if (!buffer)
-// 		return (NULL);
-// 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-// 	{
-// 		free(backup);
-// 		free(buffer);
-// 		backup = NULL;
-// 		buffer = NULL;
-// 		return (NULL);
-// 	}
-// 	line = ft_read_until_newline(fd, backup, buffer);
-// 	free(buffer);
-// 	buffer = NULL;
-// 	if (!line)
-// 		return (NULL);
-// 	backup = ft_set_current_line(line);
-// 	return (line);
-// }
 // int	main(void)
 // {
 // 	int		fd;
