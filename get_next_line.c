@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:45:02 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/13 17:13:04 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:17:00 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	*get_next_line(int fd)
 // {
 // 	int		fd;
 // 	char	*line;
-// 	fd = open("multiplenewline.txt", O_RDONLY);
+// 	fd = open("text.txt", O_RDONLY);
 // 	if (fd < 0)
 // 		return (-1);
 // 	line = get_next_line(fd);
