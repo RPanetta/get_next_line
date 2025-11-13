@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:55:38 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/11 11:59:03 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/13 17:08:09 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,17 @@
 # include <stdio.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 20
+#  define BUFFER_SIZE 42
 # endif
 
 char	*get_next_line(int fd);
+char	*ft_read_until_newline(int fd, char **backup, char *buffer);
+char	*ft_set_current_line(char *line_buffer);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(const char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strchr(const char *s, int c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+void	ft_free_memory(char **backup, char **buffer);
 
 #endif

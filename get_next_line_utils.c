@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:58:33 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/11 11:55:21 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:50:32 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ char	*ft_strdup(const char *s)
 	size_t	len;
 	size_t	i;
 
+	if (!s)
+		return (NULL);
 	len = ft_strlen(s);
 	copy = malloc(len + 1);
 	if (copy == NULL)
