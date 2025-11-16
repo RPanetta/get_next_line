@@ -6,41 +6,40 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:58:33 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/13 16:50:32 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/16 18:31:58 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-// Description: returns a pointer to the first occurrence
-// of the character c in the string s.
-char	*ft_strchr(const char *s, int c)
+//Looks for a newline in line
+//if there is one: sets charsleft to whatever is "to the right" 
+//of the '\n' (the leftover)
+//and writes a '\0' at the position of '\n' + 1
+//if there isn’t one: returns NULL
+char	*ft_separate_line_at_newline(char *line, char **chars_left)
 {
-	int	i;
+	char	*newlineposition;
 
-	i = 0;
-	while (s[i] != '\0')
+	newlineposition = ft_find_nl_position(line);
+	if (newlineposition)
 	{
-		if (s[i] == (char)c)
-		{
-			return ((char *)(s + i));
-		}
-		i++;
-	}
-	if ((char)c == '\0')
-	{
-		return ((char *)(s + i));
+		*chars_left = ft_strdup(newlineposition + 1);
+		*(newlineposition + 1) = '\0';
+		return (line);
 	}
 	return (NULL);
 }
 
-// Description: calculate the length of a string,
-// excluding the terminating null byte ('\0')
+//Calculates the length of a string, excluding the '\0' byte
+//(handles NULL pointers)
 size_t	ft_strlen(const char *str)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i] != '\0')
 	{
 		i++;
@@ -48,19 +47,15 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-// Description: returns a pointer to a new string
-// which is a duplicate of the string s. Memory for the new string
-// is obtained with malloc, and can be freed with free.
+//Returns a pointer to the storage space containing the copied string
 char	*ft_strdup(const char *s)
 {
 	char	*copy;
 	size_t	len;
 	size_t	i;
 
-	if (!s)
-		return (NULL);
 	len = ft_strlen(s);
-	copy = malloc(len + 1);
+	copy = malloc(sizeof(char) * (len + 1));
 	if (copy == NULL)
 	{
 		return (NULL);
@@ -75,65 +70,46 @@ char	*ft_strdup(const char *s)
 	return (copy);
 }
 
-// Description: Allocates memory (using malloc)
-// and returns a new string, which is the result
-// of concatenating ’s1’ and ’s2’.
-char	*ft_strjoin(char const *s1, char const *s2)
+//Makes a new copy of a string but only takes a certain number of letters from 
+//it—you have a long sentence and you only want to copy the first few words
+char	*ft_strndup(const char *s, size_t n)
 {
-	size_t	len1;
-	size_t	len2;
-	char	*result;
+	char	*ptr;
 	size_t	i;
+	size_t	len;
 
-	if (!s1 || !s2)
+	if (!s)
 		return (NULL);
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	result = malloc(sizeof(char) * (len1 + len2 + 1));
-	if (result == NULL)
+	len = ft_strlen(s);
+	if (len > n)
+		len = n;
+	ptr = (char *)malloc(sizeof(char) * (len + 1));
+	if (!ptr)
 		return (NULL);
 	i = 0;
-	while (i < len1)
+	while (i < len)
 	{
-		result[i] = s1[i];
+		ptr[i] = s[i];
 		i++;
 	}
-	while (i < len1 + len2)
-	{
-		result[i] = s2[i - len1];
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
+	ptr[len] = '\0';
+	return (ptr);
 }
 
-// Description: returns characters from the string value
-// starting at the character position specidied by start.
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+//Returns a pointer to the first occurence of \n
+//in the string s, or NULL if not found
+char	*ft_find_nl_position(const char *s)
 {
-	size_t	real_len;
-	char	*substr;
-	size_t	i;
+	int	i;
 
-	if (s == NULL)
+	if (!s)
 		return (NULL);
-	if (start >= (unsigned int)ft_strlen(s))
+	i = 0;
+	while (s[i] != '\0')
 	{
-		substr = malloc(1);
-		if (substr == NULL)
-			return (NULL);
-		substr[0] = '\0';
-		return (substr);
+		if (s[i] == '\n')
+			return ((char *)&s[i]);
+		i++;
 	}
-	real_len = ft_strlen(s) - start;
-	if (real_len > len)
-		real_len = len;
-	substr = malloc(real_len + 1);
-	if (substr == NULL)
-		return (NULL);
-	i = -1;
-	while (++i < real_len)
-		substr[i] = s[start + i];
-	substr[real_len] = '\0';
-	return (substr);
+	return (NULL);
 }

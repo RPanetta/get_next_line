@@ -6,99 +6,130 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:45:02 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/13 17:55:51 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/16 18:32:26 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	ft_free_memory(char **backup, char **buffer)
+//Joins what the string line has (if anything) with what we read in buffer.
+//buffer always contains something because we call this function if bytesread > 0
+char	*ft_join_line_and_buffer(char *line, char *buffer)
 {
-	if (backup && *backup)
-	{
-		free(*backup);
-		*backup = NULL;
-	}
-	if (buffer && *buffer)
-	{
-		free(*buffer);
-		*buffer = NULL;
-	}
-}
-
-char	*ft_set_current_line(char *line_buffer)
-{
-	char	*backup;
-	ssize_t	i;
+	char	*joined;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
-	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
+	j = 0;
+	if (!line)
+		return (ft_strdup(buffer));
+	joined = malloc(sizeof(char) * (ft_strlen(line) + ft_strlen(buffer) + 1));
+	if (!joined)
+		return (free(line), NULL);
+	while (line[i] != '\0')
 	{
+		joined[i] = line[i];
 		i++;
 	}
-	if (line_buffer[i] == '\0' || line_buffer[i + 1] == '\0')
-		return (NULL);
-	backup = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - (i + 1));
-	if (backup[0] == '\0')
-	{
-		ft_free_memory(&backup, NULL);
-		line_buffer[i + 1] = '\0';
-		return (NULL);
-	}
-	line_buffer[i + 1] = '\0';
-	return (backup);
+	while (buffer[j] != '\0')
+		joined[i++] = buffer[j++];
+	joined[i] = '\0';
+	free(line);
+	return (joined);
 }
 
-char	*ft_read_until_newline(int fd, char **backup, char *buffer)
+//Used when read() return -1 (when it fails)
+void	*ft_free_all(char *buffer, char *line, char **chars_left)
 {
-	ssize_t	bytes_read;
-	char	*tmp;
-
-	bytes_read = 1;
-	while (bytes_read > 0)
+	free(buffer);
+	free(line);
+	if (chars_left && *chars_left)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-			return (ft_free_memory(backup, NULL), NULL);
-		else if (bytes_read == 0)
-			break ;
-		buffer[bytes_read] = '\0';
-		if (!*backup)
-			*backup = ft_strdup("");
-		tmp = *backup;
-		*backup = ft_strjoin(tmp, buffer);
-		ft_free_memory(&tmp, NULL);
-		if (!*backup)
-			return (NULL);
-		if (ft_strchr(buffer, '\n'))
-			break ;
+		free(*chars_left);
+		*chars_left = NULL;
 	}
-	return (*backup);
+	return (NULL);
 }
 
+char	*ft_read_until_newline(int fd, char *line, char **chars_left)
+{
+	char	*buffer;
+	char	*newline;
+	ssize_t	bytesread;
+
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (free(line), NULL);
+	bytesread = read(fd, buffer, BUFFER_SIZE);
+	if (bytesread < 0)
+		return (ft_free_all(buffer, line, chars_left));
+	while (bytesread > 0)
+	{
+		buffer[bytesread] = '\0';
+		line = ft_join_line_and_buffer(line, buffer);
+		newline = ft_separate_line_at_newline(line, chars_left);
+		if (newline)
+		{
+			free(buffer);
+			return (newline);
+		}
+		bytesread = read(fd, buffer, BUFFER_SIZE);
+		if (bytesread < 0)
+			return (ft_free_all(buffer, line, chars_left));
+	}
+	return (free(buffer), line);
+}
+
+void	ft_extract_line_from_chars_left(char **chars_left, char **line)
+{
+	char	*new_chars_left;
+	char	*new_line_position;
+	size_t	len;
+
+	if (!chars_left || !*chars_left)
+	{
+		*line = NULL;
+		return ;
+	}
+	new_line_position = ft_find_nl_position(*chars_left);
+	if (new_line_position)
+	{
+		len = new_line_position - *chars_left + 1;
+		*line = ft_strndup(*chars_left, len);
+		new_chars_left = ft_strdup(new_line_position + 1);
+		free(*chars_left);
+		*chars_left = new_chars_left;
+	}
+	else
+	{
+		*line = ft_strdup(*chars_left);
+		free(*chars_left);
+		*chars_left = NULL;
+	}
+}
+
+//Static remembers where it stopped in the previous call
 char	*get_next_line(int fd)
 {
-	static char	*backup = NULL;
+	static char	*chars_left;
 	char		*line;
-	char		*buffer;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	line = NULL;
+	if (chars_left)
 	{
-		ft_free_memory(&backup, &buffer);
+		ft_extract_line_from_chars_left(&chars_left, &line);
+		if (ft_find_nl_position(line))
+			return (line);
+	}
+	line = ft_read_until_newline(fd, line, &chars_left);
+	if (!line || *line == '\0')
+	{
+		free(line);
 		return (NULL);
 	}
-	line = ft_read_until_newline(fd, &backup, buffer);
-	free(buffer);
-	buffer = NULL;
-	if (!line || line[0] == '\0')
-	{
-		ft_free_memory(&line, &backup);
-		return (NULL);
-	}
-	backup = ft_set_current_line(line);
 	return (line);
 }
 
