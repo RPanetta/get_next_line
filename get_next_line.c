@@ -6,14 +6,15 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:45:02 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/16 18:32:26 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/16 23:43:17 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 //Joins what the string line has (if anything) with what we read in buffer.
-//buffer always contains something because we call this function if bytesread > 0
+//buffer always contains something because we call
+//this function if bytesread > 0
 char	*ft_join_line_and_buffer(char *line, char *buffer)
 {
 	char	*joined;
