@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:45:02 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/17 15:29:52 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/17 23:19:54 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ void	ft_extract_line_from_chars_left(char **chars_left, char **line)
 
 	if (!chars_left || !*chars_left)
 	{
-		*line = NULL;
+		free(*chars_left);
+		*chars_left = NULL;
 		return ;
 	}
 	new_line_position = ft_find_nl_position(*chars_left);

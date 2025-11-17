@@ -6,7 +6,7 @@
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:58:33 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/17 15:45:41 by rpanetta         ###   ########.fr       */
+/*   Updated: 2025/11/17 23:43:02 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ char	*ft_separate_line_at_newline(char *line, char **chars_left)
 		if (*(newlineposition + 1) == '\0')
 			*chars_left = NULL;
 		else
-			*chars_left = ft_strndup(newlineposition + 1,
-					ft_strlen(newlineposition + 1));
+			*chars_left = ft_strdup(newlineposition + 1);
 		free(line);
 		return (result);
 	}
