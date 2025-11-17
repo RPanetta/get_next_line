@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 11:45:02 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/17 15:29:52 by rpanetta         ###   ########.fr       */
+/*   Created: 2025/11/17 12:50:19 by rpanetta          #+#    #+#             */
+/*   Updated: 2025/11/17 15:31:07 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 //Joins what the string line has (if anything) with what we read in buffer.
 //buffer always contains something because we call
@@ -113,19 +113,19 @@ void	ft_extract_line_from_chars_left(char **chars_left, char **line)
 //Static remembers where it stopped in the previous call
 char	*get_next_line(int fd)
 {
-	static char	*chars_left;
+	static char	*chars_left[1024];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = NULL;
-	if (chars_left)
+	if (chars_left[fd])
 	{
-		ft_extract_line_from_chars_left(&chars_left, &line);
+		ft_extract_line_from_chars_left(&chars_left[fd], &line);
 		if (ft_find_nl_position(line))
 			return (line);
 	}
-	line = ft_read_until_newline(fd, line, &chars_left);
+	line = ft_read_until_newline(fd, line, &chars_left[fd]);
 	if (!line || *line == '\0')
 	{
 		free(line);

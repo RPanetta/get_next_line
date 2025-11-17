@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpanetta <rpanetta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 11:58:33 by rpanetta          #+#    #+#             */
-/*   Updated: 2025/11/17 15:45:41 by rpanetta         ###   ########.fr       */
+/*   Created: 2025/11/17 12:52:26 by rpanetta          #+#    #+#             */
+/*   Updated: 2025/11/17 13:04:57 by rpanetta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 //Looks for a newline in line
 //if there is one: sets charsleft to whatever is "to the right" 
